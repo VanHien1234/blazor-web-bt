@@ -1,0 +1,17 @@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="typeof(HomePageMaster)">
+        </RouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+
+    </Found>
+    <NotFound>
+        @* giao diện khi không tìm thấy route tương ứng
+            file .rảzor có @page  => định nghĩa route
+            không có @page  => component bình thường
+         *@
+            <p>Sorry, there's nothing at this address.</p>
+
+    </NotFound>
+ 
+</Router>

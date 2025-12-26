@@ -1,0 +1,35 @@
+@page "/BaiTapXe"
+@using web_blazor_server.Pages.ComponentParam
+
+<div class="container">
+    <div class=" p-5 d-flex flex-row gap-5 w-full">
+
+    <img src="products/@mauXe-car.jpg" alt="" width="400">
+
+    <div class=" d-flex flex-row gap-2">
+    @foreach (string mau in dsMau)
+    {
+        <button @onclick="()=>DoiMauXe(mau)" style="background-color:@mau; width: 180px; height: 50px; color: white; border: 2px solid white; border-radius: 5px;" class="btn">@mau</button>
+
+
+    }
+    </div>
+
+</div>
+
+
+</div>
+
+
+@code {
+
+    public List<string> dsMau = new List<string>() { "red", "black", "silver", };
+    public string mauXe = "black";
+
+    void DoiMauXe(string mau)
+    {
+        mauXe = mau;
+
+    }
+
+}
