@@ -3,9 +3,11 @@
 @using System.ComponentModel.DataAnnotations
 
 <div class="container mt-4">
-    <h1 class="mb-4">Form Liên Hệ Khách Hàng</h1>
+  <div class="row p-2 w-full">
 
-    <EditForm Model="@customerContact" OnValidSubmit="@HandleSubmit">
+    <div class="col-6">
+      <h1 class="mb-4">Form Liên Hệ Khách Hàng</h1>
+<EditForm Model="@customerContact" OnValidSubmit="@HandleSubmit">
         <DataAnnotationsValidator />
 
         <div class="row">
@@ -85,7 +87,6 @@
             </div>
         </div>
     </EditForm>
-
     @if (!string.IsNullOrEmpty(submitMessage))
     {
         <div class="alert @(isSuccess ? "alert-success" : "alert-danger") mt-3" role="alert">
@@ -93,6 +94,9 @@
         </div>
     }
 
+    </div>
+
+    <div class="col-6">
     <h1 class="mb-4">Form Đăng ký khóa học</h1>
 
         <EditForm Model="@registerCourse" OnValidSubmit="@HandleSubmitRegisterCourse">
@@ -199,7 +203,16 @@
             @submitMessageRegisterCourse
         </div>
     }
+    </div>
+    
 
+
+    
+
+
+
+
+</div>
 </div>
 
 @code {
