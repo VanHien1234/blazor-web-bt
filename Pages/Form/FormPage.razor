@@ -1,0 +1,263 @@
+@page "/FormPage"
+@using web_blazor_server.Pages.Form
+@using System.ComponentModel.DataAnnotations
+
+<div class="container mt-4">
+    <h1 class="mb-4">Form Liên Hệ Khách Hàng</h1>
+
+    <EditForm Model="@customerContact" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Họ và tên -->
+                        <div class="mb-3">
+                            <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="customerContact.FullName" class="form-control" />
+                            <ValidationMessage For="@(() => customerContact.FullName)" />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="customerContact.Email" type="email" class="form-control" />
+                            <ValidationMessage For="@(() => customerContact.Email)" />
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="customerContact.Phone" type="tel" class="form-control" />
+                            <ValidationMessage For="@(() => customerContact.Phone)" />
+                            <small class="form-text text-muted">Nhập số điện thoại từ 10-12 chữ số</small>
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ</label>
+                            <InputText @bind-Value="customerContact.Address" class="form-control" />
+                            <ValidationMessage For="@(() => customerContact.Address)" />
+                            <small class="form-text text-muted">Tùy chọn, nếu nhập phải có tối thiểu 5 ký tự</small>
+                        </div>
+
+                        <!-- Nội dung tin nhắn -->
+                        <div class="mb-3">
+                            <label class="form-label">Nội dung tin nhắn <span class="text-danger">*</span></label>
+                            <InputTextArea @bind-Value="customerContact.Message" class="form-control" rows="5" />
+                            <ValidationMessage For="@(() => customerContact.Message)" />
+                        </div>
+
+                        <!-- Chọn dịch vụ -->
+                        <div class="mb-3">
+                            <label class="form-label">Chọn dịch vụ cần tư vấn <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="customerContact.Service" class="form-select">
+                                <option value="">-- Choose --</option>
+                                <option value="1">Dịch vụ 1</option>
+                                <option value="2">Dịch vụ 2</option>
+                                <option value="3">Dịch vụ 3</option>
+                                <option value="4">Dịch vụ 4</option>
+                                <option value="5">Dịch vụ 5</option>
+                                <option value="6">Dịch vụ 6</option>
+                            </InputSelect>  
+                            <ValidationMessage For="@(() => customerContact.Service)" />
+                        </div>
+
+                        <!-- Đồng ý điều khoản -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="customerContact.TermsAndConditions" class="form-check-input" id="termsCheck" />
+                                <label class="form-check-label" for="termsCheck">
+                                    Đồng ý với điều khoản và chính sách <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <ValidationMessage For="@(() => customerContact.TermsAndConditions)" />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Gửi liên hệ</button>
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="ResetForm">Làm mới</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(submitMessage))
+    {
+        <div class="alert @(isSuccess ? "alert-success" : "alert-danger") mt-3" role="alert">
+            @submitMessage
+        </div>
+    }
+
+    <h1 class="mb-4">Form Đăng ký khóa học</h1>
+
+        <EditForm Model="@registerCourse" OnValidSubmit="@HandleSubmitRegisterCourse">
+        <DataAnnotationsValidator />
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Họ và tên -->
+                        <div class="mb-3">
+                            <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="registerCourse.FullName" class="form-control" />
+                            <ValidationMessage For="@(() => registerCourse.FullName)" />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="registerCourse.Email" type="email" class="form-control" />
+                            <ValidationMessage For="@(() => registerCourse.Email)" />
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="registerCourse.Phone" type="tel" class="form-control" />
+                            <ValidationMessage For="@(() => registerCourse.Phone)" />
+                            <small class="form-text text-muted">Nhập số điện thoại từ 10-12 chữ số</small>
+                        </div>
+
+                        <!-- Chọn khóa học -->
+                        <div class="mb-3">
+                            <label class="form-label">Chọn khóa học <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="registerCourse.Course" class="form-select">
+                                <option value="">-- Chọn khóa học --</option>
+                                <option value="web-development">Lập trình Web Development</option>
+                                <option value="mobile-development">Lập trình Mobile App</option>
+                                <option value="data-science">Khoa học Dữ liệu</option>
+                                <option value="ai-ml">Trí tuệ Nhân tạo & Machine Learning</option>
+                                <option value="cybersecurity">An ninh Mạng</option>
+                                <option value="cloud-computing">Điện toán Đám mây</option>
+                                <option value="ui-ux-design">Thiết kế UI/UX</option>
+                                <option value="digital-marketing">Marketing Số</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => registerCourse.Course)" />
+                        </div>
+
+                        <!-- Hình thức học (Radio Button) -->
+                        <div class="mb-3">
+                            <label class="form-label">Hình thức học <span class="text-danger">*</span></label>
+                            <InputRadioGroup @bind-Value="registerCourse.StudyMethod">
+                                <div class="form-check">
+                                    <InputRadio Value="@("Online")" class="form-check-input" id="online" />
+                                    <label class="form-check-label" for="online">Online</label>
+                                </div>
+                                <div class="form-check">
+                                    <InputRadio Value="@("Offline")" class="form-check-input" id="offline" />
+                                    <label class="form-check-label" for="offline">Offline</label>
+                                </div>
+                            </InputRadioGroup>
+                            <ValidationMessage For="@(() => registerCourse.StudyMethod)" />
+                        </div>
+
+                        <!-- Ngày bắt đầu mong muốn -->
+                        <div class="mb-3">
+                            <label class="form-label">Ngày bắt đầu mong muốn <span class="text-danger">*</span></label>
+                            <InputDate @bind-Value="registerCourse.DesiredStartDate" class="form-control" format="dd/MM/yyyy" />
+                            <ValidationMessage For="@(() => registerCourse.DesiredStartDate)" />
+                        </div>
+
+                        <!-- Bình luận hoặc ghi chú -->
+                        <div class="mb-3">
+                            <label class="form-label">Bình luận hoặc ghi chú</label>
+                            <InputTextArea @bind-Value="registerCourse.Comments" class="form-control" rows="4" />
+                            <small class="form-text text-muted">Tùy chọn</small>
+                        </div>
+
+                        <!-- Đồng ý điều khoản -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="registerCourse.TermsAndConditions" class="form-check-input" id="termsCheck" />
+                                <label class="form-check-label" for="termsCheck">
+                                    Đồng ý với điều khoản và chính sách <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <ValidationMessage For="@(() => registerCourse.TermsAndConditions)" />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Đăng ký khóa học</button>
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="ResetFormRegisterCourses">Làm mới</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(submitMessageRegisterCourse))
+    {
+        <div class="alert @(isSuccessRegisterCourse ? "alert-success" : "alert-danger") mt-3" role="alert">
+            @submitMessageRegisterCourse
+        </div>
+    }
+
+</div>
+
+@code {
+    private CustomerContactModel customerContact = new CustomerContactModel();
+    private string submitMessage = string.Empty;
+    private bool isSuccess = false;
+
+    private void HandleSubmit()
+    {
+        // Xử lý khi form hợp lệ
+        submitMessage = $"Thành công";
+        isSuccess = true;
+        
+        // In thông tin để kiểm tra (trong thực tế sẽ gửi đến server)
+        Console.WriteLine($"Full Name: {customerContact.FullName}");
+        Console.WriteLine($"Email: {customerContact.Email}");
+        Console.WriteLine($"Phone: {customerContact.Phone}");
+        Console.WriteLine($"Address: {customerContact.Address}");
+        Console.WriteLine($"Message: {customerContact.Message}");
+        Console.WriteLine($"Service: {customerContact.Service}");
+        Console.WriteLine($"Terms: {customerContact.TermsAndConditions}");
+    }
+
+    private void ResetForm()
+    {
+        customerContact = new CustomerContactModel();
+        submitMessage = string.Empty;
+        isSuccess = false;
+    }
+
+
+
+
+        private RegisterCourseModel registerCourse = new RegisterCourseModel();
+    private string submitMessageRegisterCourse = string.Empty;
+    private bool isSuccessRegisterCourse = false;
+
+    private void HandleSubmitRegisterCourse()
+    {
+        // Xử lý khi form hợp lệ
+        submitMessageRegisterCourse = $"Đăng ký thành công!";
+        isSuccessRegisterCourse = true;
+        
+        // In thông tin để kiểm tra (trong thực tế sẽ gửi đến server)
+        Console.WriteLine($"Full Name: {registerCourse.FullName}");
+        Console.WriteLine($"Email: {registerCourse.Email}");
+        Console.WriteLine($"Phone: {registerCourse.Phone}");
+        Console.WriteLine($"Course: {registerCourse.Course}");
+        Console.WriteLine($"Study Method: {registerCourse.StudyMethod}");
+        Console.WriteLine($"Desired Start Date: {registerCourse.DesiredStartDate}");
+        Console.WriteLine($"Comments: {registerCourse.Comments}");
+        Console.WriteLine($"Terms: {registerCourse.TermsAndConditions}");
+    }
+
+    private void ResetFormRegisterCourses()
+    {
+        registerCourse = new RegisterCourseModel();
+        submitMessageRegisterCourse = string.Empty;
+        isSuccessRegisterCourse = false;
+    }
+}
