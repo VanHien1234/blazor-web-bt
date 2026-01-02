@@ -1,0 +1,38 @@
+@using web_blazor_server.Models.DTO
+
+<div class="mt-4">
+    <h4 class="text-white mb-3">Transaction History</h4>
+    @if (Transactions == null || !Transactions.Any())
+    {
+        <p class="text-white-50">Chưa có giao dịch nào</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Date/Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Transactions.OrderByDescending(t => t.DateTime))
+                    {
+                        <tr style="background-color: @(transaction.Type == "Deposit" ? "#d1e7dd" : "#f8d7da");">
+                            <td style="color: #000;">@transaction.Type</td>
+                            <td style="color: #000;">$@transaction.Amount.ToString("F2")</td>
+                            <td style="color: #000;">@transaction.DateTime.ToString("dd MMM h:mmtt", new System.Globalization.CultureInfo("en-US"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<Transaction>? Transactions { get; set; }
+}
+

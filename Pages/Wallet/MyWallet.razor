@@ -1,0 +1,84 @@
+@using web_blazor_server.Models.DTO
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-white" style="border-radius: 10px;">
+                <div class="card-body p-4">
+                    <h2 class="text-white mb-4">My Wallet</h2>
+                    
+                    <div class="mb-4">
+                        <h1 class="text-warning mb-1">$@Balance.ToString("F2")</h1>
+                        <p class="text-white-50 mb-0">Total balance</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <button class="btn btn-success me-2" @onclick="ShowDepositModal">
+                            Deposit
+                        </button>
+                        <button class="btn btn-danger" @onclick="ShowWithdrawModal">
+                            Withdraw
+                        </button>
+                    </div>
+
+                    <TransactionHistory Transactions="@Transactions" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ModalWallet 
+    Title="@ModalTitle"
+    IsVisible="@IsModalVisible"
+    IsVisibleChanged="@((bool value) => IsModalVisible = value)"
+    OnConfirm="@HandleTransaction"
+    CurrentBalance="@Balance"
+    IsWithdraw="@IsWithdrawMode" />
+
+@code {
+    private decimal Balance { get; set; } = 0;
+    private List<Transaction> Transactions { get; set; } = new();
+    private bool IsModalVisible { get; set; } = false;
+    private string ModalTitle { get; set; } = string.Empty;
+    private bool IsWithdrawMode { get; set; } = false;
+
+    private void ShowDepositModal()
+    {
+        ModalTitle = "Deposit Money";
+        IsWithdrawMode = false;
+        IsModalVisible = true;
+    }
+
+    private void ShowWithdrawModal()
+    {
+        ModalTitle = "Withdraw Money";
+        IsWithdrawMode = true;
+        IsModalVisible = true;
+    }
+
+    private void HandleTransaction(decimal amount)
+    {
+        if (IsWithdrawMode)
+        {
+            Balance -= amount;
+            Transactions.Add(new Transaction
+            {
+                Type = "Withdraw",
+                Amount = amount,
+                DateTime = DateTime.Now
+            });
+        }
+        else
+        {
+            Balance += amount;
+            Transactions.Add(new Transaction
+            {
+                Type = "Deposit",
+                Amount = amount,
+                DateTime = DateTime.Now
+            });
+        }
+    }
+}
+

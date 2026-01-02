@@ -1,0 +1,92 @@
+@using web_blazor_server.Models.DTO
+
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="amountInput" class="form-label">Amount</label>
+                        <input type="number" 
+                               class="form-control @(IsInvalid ? "is-invalid" : "")" 
+                               id="amountInput" 
+                               @bind="Amount" 
+                               @bind:event="oninput"
+                               step="0.01" 
+                               min="0.01" />
+                        @if (IsInvalid)
+                        {
+                            <div class="invalid-feedback">
+                                @ErrorMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="HandleOk">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+    [Parameter] public EventCallback<decimal> OnConfirm { get; set; }
+    [Parameter] public decimal CurrentBalance { get; set; }
+    [Parameter] public bool IsWithdraw { get; set; }
+
+    private decimal Amount { get; set; }
+    private bool IsInvalid { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        if (IsVisible)
+        {
+            Amount = 0;
+            IsInvalid = false;
+            ErrorMessage = string.Empty;
+        }
+    }
+
+    private async Task CloseModal()
+    {
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(false);
+        Amount = 0;
+        IsInvalid = false;
+        ErrorMessage = string.Empty;
+    }
+
+    private async Task HandleOk()
+    {
+        // Validate
+        if (Amount <= 0)
+        {
+            IsInvalid = true;
+            ErrorMessage = "Số tiền phải là số dương hợp lệ";
+            return;
+        }
+
+        if (IsWithdraw && Amount > CurrentBalance)
+        {
+            IsInvalid = true;
+            ErrorMessage = "Số tiền rút không được vượt quá số dư hiện tại";
+            return;
+        }
+
+        IsInvalid = false;
+        await OnConfirm.InvokeAsync(Amount);
+        await CloseModal();
+    }
+}
+
